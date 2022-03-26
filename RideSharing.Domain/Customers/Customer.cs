@@ -1,10 +1,15 @@
-﻿using RideSharing.Domain.Common;
+﻿using RideSharing.Abstractions.Domain;
+using RideSharing.Abstractions.Extensions;
+using RideSharing.Domain.Common;
+using RideSharing.Domain.Customers.Validations;
 using RideSharing.Domain.Locations;
 using RideSharing.Domain.Trips;
+using RideSharing.Domain.Trips.Events;
+using RideSharing.Domain.Trips.ValueObjects;
 
 namespace RideSharing.Domain.Customers
 {
-    public class Customer
+    public class Customer : AggregateRoot
     {
         private Customer() { }
 
@@ -12,8 +17,10 @@ namespace RideSharing.Domain.Customers
         {
 
 
-            Person = person ?? throw new ArgumentNullException(nameof(person));
+            Person = person;
             CreatedAt = DateTime.UtcNow;
+
+            this.Validate<Customer, CustomerValidator>();
         }
 
         public Person Person { get; private set; }
@@ -34,10 +41,15 @@ namespace RideSharing.Domain.Customers
                 throw new ArgumentNullException(nameof(endLocation));
             }
 
-            var trip = new Trip(this, startLocation, endLocation);
+            var tripLocation = new TripLocation(startLocation, endLocation);
+
+            var trip = new Trip(this, tripLocation);
 
             _trips.Add(trip);
+
+            AddDomainEvent(new TripCreatedEvent(this, trip));
         }
+
 
         public void UpdateTripRating(Guid tripId, int rating)
         {

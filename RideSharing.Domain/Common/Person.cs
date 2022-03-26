@@ -1,4 +1,6 @@
-﻿using RideSharing.Domain.Common.Enums;
+﻿using RideSharing.Abstractions.Extensions;
+using RideSharing.Domain.Common.Enums;
+using RideSharing.Domain.Common.Validations;
 
 namespace RideSharing.Domain.Common
 {
@@ -31,8 +33,10 @@ namespace RideSharing.Domain.Common
             DateOfBirth = dateOfBirth;
             FirstName = firstName;
             LastName = lastName;
-            MiddleName = middleName ?? throw new ArgumentNullException(nameof(middleName));
-            Phone = phone ?? throw new ArgumentNullException(nameof(phone));
+            MiddleName = middleName;
+            Phone = phone;
+
+            this.Validate<Person, PersonValidator>();
         }
 
         public Gender Gender { get; private set; }

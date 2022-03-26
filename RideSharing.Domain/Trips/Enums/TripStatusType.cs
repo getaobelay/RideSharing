@@ -11,6 +11,7 @@ namespace RideSharing.Domain.Trips.Enums
     {
         Cancelled = 0,
         InProgress = 1,
-        Completed = 2
+        Completed = 2,
+        Requested = 3
     }
 }

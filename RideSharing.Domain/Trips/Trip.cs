@@ -3,24 +3,29 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using RideSharing.Abstractions.Domain;
+using RideSharing.Abstractions.Extensions;
 using RideSharing.Domain.Cars;
 using RideSharing.Domain.Customers;
 using RideSharing.Domain.Drivers;
 using RideSharing.Domain.Locations;
 using RideSharing.Domain.Trips.Enums;
+using RideSharing.Domain.Trips.Validations;
 using RideSharing.Domain.Trips.ValueObjects;
 
 namespace RideSharing.Domain.Trips
 {
 
-    public class Trip
+    public class Trip : AggregateRoot
     {
-        public Trip(Customer customer, Location startLocation, Location endLoaciton)
+        public Trip(Customer customer, TripLocation tripLocation)
         {
             Customer = customer;
-            TripLocation = new TripLocation(startLocation, endLoaciton);
+            TripLocation = tripLocation;
             TripDate = new TripDate();
             Status = TripStatusType.InProgress;
+
+            this.Validate<Trip, TripValidator>();
         }
 
         public Guid Id { get; }
@@ -66,6 +71,7 @@ namespace RideSharing.Domain.Trips
         }
         public void Start()
         {
+
             if (Status == TripStatusType.Completed)
             {
                 throw new InvalidOperationException(nameof(TripStatusType.Completed));
@@ -85,10 +91,26 @@ namespace RideSharing.Domain.Trips
                 throw new InvalidOperationException(nameof(TripStatusType.Completed));
             }
 
+            if (Status == TripStatusType.Cancelled)
+            {
+                throw new InvalidOperationException(nameof(TripStatusType.Cancelled));
+            }
+
             Status = TripStatusType.Cancelled;
         }
         public void Complete()
         {
+            if (Status == TripStatusType.Requested)
+            {
+                throw new InvalidOperationException(nameof(TripStatusType.Requested));
+            }
+
+            if (Status == TripStatusType.Completed)
+            {
+                throw new InvalidOperationException(nameof(TripStatusType.Completed));
+            }
+
+
             if (Status == TripStatusType.Cancelled)
             {
                 throw new InvalidOperationException(nameof(TripStatusType.Cancelled));

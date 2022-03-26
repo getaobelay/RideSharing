@@ -1,5 +1,7 @@
-﻿using RideSharing.Domain.Locations;
-using RideSharing.Domain.Trips;
+﻿using RideSharing.Abstractions.Extensions;
+using RideSharing.Domain.Locations;
+using RideSharing.Domain.Trips.Validations;
+
 namespace RideSharing.Domain.Trips.ValueObjects
 {
     public class TripLocation
@@ -8,8 +10,10 @@ namespace RideSharing.Domain.Trips.ValueObjects
 
         internal TripLocation(Location startLocation, Location endLocation)
         {
-            StartLocation = startLocation ?? throw new ArgumentNullException(nameof(startLocation));
-            EndLocation = endLocation ?? throw new ArgumentNullException(nameof(endLocation));
+            StartLocation = startLocation;
+            EndLocation = endLocation;
+
+            this.Validate<TripLocation, TripLocationValidator>();
         }
 
         public Guid StartLocationId { get; }
