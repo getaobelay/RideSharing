@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RideSharing.Api", "RideShar
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RideSharing.Domain", "RideSharing.Domain\RideSharing.Domain.csproj", "{32424646-F73B-4B1E-92B6-15EC46EE71F3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RideSharing.Abstractions", "RideSharing.Abstractions\RideSharing.Abstractions.csproj", "{89BFFC61-5E96-46E2-98F0-9DA169EBF4C9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{32424646-F73B-4B1E-92B6-15EC46EE71F3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{32424646-F73B-4B1E-92B6-15EC46EE71F3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{32424646-F73B-4B1E-92B6-15EC46EE71F3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{89BFFC61-5E96-46E2-98F0-9DA169EBF4C9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{89BFFC61-5E96-46E2-98F0-9DA169EBF4C9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{89BFFC61-5E96-46E2-98F0-9DA169EBF4C9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{89BFFC61-5E96-46E2-98F0-9DA169EBF4C9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

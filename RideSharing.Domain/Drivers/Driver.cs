@@ -1,18 +1,27 @@
-﻿using RideSharing.Domain.Cars;
+﻿using RideSharing.Abstractions.Domain;
+using RideSharing.Domain.Cars;
 using RideSharing.Domain.Common;
+using RideSharing.Domain.Trips;
 
 namespace RideSharing.Domain.Drivers
 {
-    public class Driver
+    public sealed class Driver : AggregateRoot
     {
+
         private Driver() { }
 
         internal Driver(Person person, Car car, string licenseNo)
         {
-            Person = person;
+            if (string.IsNullOrWhiteSpace(licenseNo))
+            {
+                throw new ArgumentException($"'{nameof(licenseNo)}' cannot be null or empty.", nameof(licenseNo));
+            }
+
+            Person = person ?? throw new ArgumentNullException(nameof(person));
+            Car = car ?? throw new ArgumentNullException(nameof(car));
+
             LicenseNo = licenseNo;
             CreatedAt = DateTime.UtcNow;
-            Car = car;
         }
 
 
@@ -21,9 +30,13 @@ namespace RideSharing.Domain.Drivers
         public DateTime CreatedAt { get; }
         public Car Car { get; private set; }
 
+
+        private readonly List<Trip> _trips = new();
+        public IReadOnlyCollection<Trip> Trips => _trips.AsReadOnly();
+
         public void UpdatePerson(Person person)
         {
-            if (person == null)
+            if (person is null)
             {
                 throw new ArgumentNullException(nameof(person));
             }
@@ -33,22 +46,44 @@ namespace RideSharing.Domain.Drivers
 
         public void UpdateLicenseNo(string licenseNo)
         {
-            if (licenseNo == null)
+            if (string.IsNullOrWhiteSpace(licenseNo))
             {
-                throw new ArgumentNullException(nameof(licenseNo));
+                throw new ArgumentException($"'{nameof(licenseNo)}' cannot be null or whitespace.", nameof(licenseNo));
             }
+
 
             LicenseNo = licenseNo;
         }
 
         public void UpdateCar(Car car)
         {
-            if (car == null)
+            if (car is null)
             {
                 throw new ArgumentNullException(nameof(car));
             }
 
             Car = car;
+        }
+        public void AddTrip(Trip trip)
+        {
+            if (trip is null)
+            {
+                throw new ArgumentNullException(nameof(trip));
+            }
+
+            _trips.Add(trip);
+        }
+
+        public void UpdateTripRating(Guid tripId, int rating)
+        {
+            var trip = _trips.SingleOrDefault(t => t.Id == tripId);
+
+            if (trip is null)
+            {
+                throw new InvalidOperationException(nameof(trip));
+            }
+
+            trip.UpdateDriverRating(rating);
         }
 
     }

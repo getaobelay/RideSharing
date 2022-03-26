@@ -8,8 +8,8 @@ namespace RideSharing.Domain.Trips.ValueObjects
 
         internal TripLocation(Location startLocation, Location endLocation)
         {
-            StartLocation = startLocation;
-            EndLocation = endLocation;
+            StartLocation = startLocation ?? throw new ArgumentNullException(nameof(startLocation));
+            EndLocation = endLocation ?? throw new ArgumentNullException(nameof(endLocation));
         }
 
         public Guid StartLocationId { get; }

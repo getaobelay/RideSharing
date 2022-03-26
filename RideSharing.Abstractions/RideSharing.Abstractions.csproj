@@ -6,8 +6,4 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\RideSharing.Abstractions\RideSharing.Abstractions.csproj" />
-  </ItemGroup>
-
 </Project>
