@@ -1,6 +1,6 @@
 ﻿using RideSharing.Abstractions.Extensions;
-using RideSharing.Domain.Common.Enums;
 using RideSharing.Domain.Common.Validations;
+using RideSharing.Shared.Enums;
 
 namespace RideSharing.Domain.Common
 {

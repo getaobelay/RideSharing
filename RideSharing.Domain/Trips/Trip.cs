@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using RideSharing.Abstractions.Domain;
+﻿using RideSharing.Abstractions.Domain;
 using RideSharing.Abstractions.Extensions;
 using RideSharing.Domain.Cars;
 using RideSharing.Domain.Customers;
@@ -18,7 +13,9 @@ namespace RideSharing.Domain.Trips
 
     public class Trip : AggregateRoot
     {
-        public Trip(Customer customer, TripLocation tripLocation)
+        protected Trip() { }
+
+        internal Trip(Customer customer, TripLocation tripLocation)
         {
             Customer = customer;
             TripLocation = tripLocation;
@@ -61,59 +58,56 @@ namespace RideSharing.Domain.Trips
         }
         public void AssignToDriver(Driver driver)
         {
-            if (driver is null)
+            switch (Status)
             {
-                throw new ArgumentNullException(nameof(driver));
+                case TripStatusType.Completed:
+                    throw new InvalidOperationException(nameof(TripStatusType.Completed));
+                case TripStatusType.Cancelled:
+                    throw new InvalidOperationException(nameof(TripStatusType.Cancelled));
+                case TripStatusType.InProgress:
+                    throw new InvalidOperationException(nameof(TripStatusType.InProgress));
             }
 
             Driver = driver;
-            Car = driver.Car;
+            Car = driver.CurrentCar;
         }
         public void Start()
         {
 
-            if (Status == TripStatusType.Completed)
+            switch (Status)
             {
-                throw new InvalidOperationException(nameof(TripStatusType.Completed));
-            }
-
-            if (Status == TripStatusType.Cancelled)
-            {
-                throw new InvalidOperationException(nameof(TripStatusType.Cancelled));
+                case TripStatusType.Completed:
+                    throw new InvalidOperationException(nameof(TripStatusType.Completed));
+                case TripStatusType.Cancelled:
+                    throw new InvalidOperationException(nameof(TripStatusType.Cancelled));
+                case TripStatusType.InProgress:
+                    throw new InvalidOperationException(nameof(TripStatusType.InProgress));
             }
 
             TripDate.TripStarted();
         }
         public void Cancel()
         {
-            if (Status == TripStatusType.Completed)
+            switch (Status)
             {
-                throw new InvalidOperationException(nameof(TripStatusType.Completed));
-            }
-
-            if (Status == TripStatusType.Cancelled)
-            {
-                throw new InvalidOperationException(nameof(TripStatusType.Cancelled));
+                case TripStatusType.Completed:
+                    throw new InvalidOperationException(nameof(TripStatusType.Completed));
+                case TripStatusType.Cancelled:
+                    throw new InvalidOperationException(nameof(TripStatusType.Cancelled));
             }
 
             Status = TripStatusType.Cancelled;
         }
         public void Complete()
         {
-            if (Status == TripStatusType.Requested)
+            switch (Status)
             {
-                throw new InvalidOperationException(nameof(TripStatusType.Requested));
-            }
-
-            if (Status == TripStatusType.Completed)
-            {
-                throw new InvalidOperationException(nameof(TripStatusType.Completed));
-            }
-
-
-            if (Status == TripStatusType.Cancelled)
-            {
-                throw new InvalidOperationException(nameof(TripStatusType.Cancelled));
+                case TripStatusType.Requested:
+                    throw new InvalidOperationException(nameof(TripStatusType.Requested));
+                case TripStatusType.Completed:
+                    throw new InvalidOperationException(nameof(TripStatusType.Completed));
+                case TripStatusType.Cancelled:
+                    throw new InvalidOperationException(nameof(TripStatusType.Cancelled));
             }
 
             Status = TripStatusType.Completed;

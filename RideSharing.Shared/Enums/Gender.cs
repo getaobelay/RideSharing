@@ -1,4 +1,4 @@
-﻿namespace RideSharing.Domain.Common.Enums
+﻿namespace RideSharing.Shared.Enums
 {
     public enum Gender
     {

@@ -18,7 +18,7 @@ namespace RideSharing.Domain.Drivers
         {
 
             Person = person;
-            Car = car;
+            CurrentCar = car;
             LicenseNo = licenseNo;
             CreatedAt = DateTime.UtcNow;
 
@@ -29,8 +29,11 @@ namespace RideSharing.Domain.Drivers
         public Person Person { get; private set; }
         public string LicenseNo { get; private set; }
         public DateTime CreatedAt { get; }
-        public Car Car { get; private set; }
-
+        public Guid CurrentCarId { get; private set; }
+        public Car CurrentCar { get; private set; }
+        public Guid CarId { get; private set; }
+        private readonly List<Car> _cars = new();
+        public IReadOnlyCollection<Car> Cars => _cars.AsReadOnly();
 
         private readonly List<Trip> _trips = new();
         public IReadOnlyCollection<Trip> Trips => _trips.AsReadOnly();
@@ -63,29 +66,15 @@ namespace RideSharing.Domain.Drivers
                 throw new ArgumentNullException(nameof(car));
             }
 
-            Car = car;
+            CurrentCar = car;
         }
+
         public void AddTrip(Trip trip)
         {
             if (trip is null)
             {
                 throw new ArgumentNullException(nameof(trip));
             }
-
-            if (trip.Status == TripStatusType.Completed)
-            {
-                throw new InvalidOperationException(nameof(TripStatusType.Completed));
-            }
-
-            if (trip.Status == TripStatusType.Cancelled)
-            {
-                throw new InvalidOperationException(nameof(TripStatusType.Cancelled));
-            }
-            if (trip.Status == TripStatusType.InProgress)
-            {
-                throw new InvalidOperationException(nameof(TripStatusType.InProgress));
-            }
-
 
             trip.AssignToDriver(this);
 

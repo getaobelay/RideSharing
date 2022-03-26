@@ -6,7 +6,7 @@ namespace RideSharing.Domain.Trips.ValueObjects
 {
     public class TripLocation
     {
-        private TripLocation() { }
+        protected TripLocation() { }
 
         internal TripLocation(Location startLocation, Location endLocation)
         {
@@ -24,9 +24,9 @@ namespace RideSharing.Domain.Trips.ValueObjects
 
         public void UpdateStartLocation(Location startLocation)
         {
-            if (startLocation == null)
+            if (startLocation is null)
             {
-
+                throw new ArgumentNullException(nameof(startLocation));
             }
 
             StartLocation = startLocation;
@@ -34,8 +34,9 @@ namespace RideSharing.Domain.Trips.ValueObjects
 
         public void UpdateEndLocation(Location endLocation)
         {
-            if (endLocation == null)
+            if (endLocation is null)
             {
+                throw new ArgumentNullException(nameof(endLocation));
 
             }
 

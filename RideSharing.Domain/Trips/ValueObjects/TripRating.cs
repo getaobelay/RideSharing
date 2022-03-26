@@ -3,7 +3,7 @@ namespace RideSharing.Domain.Trips.ValueObjects
 {
     public class TripRating
     {
-        private TripRating() { }
+        protected TripRating() { }
         internal TripRating(int customerRating = 0, int driverRating = 0)
         {
             CustomerRating = customerRating;

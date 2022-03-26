@@ -6,7 +6,7 @@ namespace RideSharing.Abstractions.Extensions
     public static class EntityValidator
     {
 
-        public static void Validate<TEntity, TValidator>(this TEntity entity)
+        public static TEntity Validate<TEntity, TValidator>(this TEntity entity)
             where TValidator : AbstractValidator<TEntity>, new()
 
         {
@@ -14,15 +14,13 @@ namespace RideSharing.Abstractions.Extensions
 
             var validationResult = validator.Validate(entity);
 
-            if (!validationResult.IsValid)
-            {
-                var exception = new NotValidException($" {nameof(TEntity)} is not valid");
+            if (validationResult.IsValid) return entity;
 
-                validationResult.Errors.ForEach(error => exception.Errors.Add(error.ErrorMessage));
+            var exception = new NotValidException($" {nameof(TEntity)} is not valid");
 
-                throw exception;
+            validationResult.Errors.ForEach(error => exception.Errors.Add(error.ErrorMessage));
 
-            }
+            throw exception;
         }
 
 

@@ -6,6 +6,7 @@ using RideSharing.Domain.Locations;
 using RideSharing.Domain.Trips;
 using RideSharing.Domain.Trips.Events;
 using RideSharing.Domain.Trips.ValueObjects;
+using RideSharing.Shared.Enums;
 
 namespace RideSharing.Domain.Customers
 {
@@ -27,6 +28,15 @@ namespace RideSharing.Domain.Customers
         public DateTime CreatedAt { get; }
         private readonly List<Trip> _trips = new();
         public IReadOnlyCollection<Trip> Trips => _trips.AsReadOnly();
+
+
+        public static Customer Create(string firstName, string lastName, string middleName, string phone, Gender gender, DateTime dateOfBirth)
+        {
+            var person = new Person(gender, dateOfBirth, firstName, lastName, middleName, phone);
+            var customer = new Customer(person);
+
+            return customer.Validate<Customer, CustomerValidator>();
+        }
 
 
         public void AddTrip(Location startLocation, Location endLocation)
