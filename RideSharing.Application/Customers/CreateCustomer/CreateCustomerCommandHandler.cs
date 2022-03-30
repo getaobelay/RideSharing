@@ -1,8 +1,7 @@
 ﻿using MediatR;
 using RideSharing.Abstractions.Commands;
-using RideSharing.Application.Customers.Dtos;
 using RideSharing.Domain.Customers;
-using RideSharing.Infrastructure;
+using RideSharing.Infrastructure.Repositories;
 
 namespace RideSharing.Application.Customers.CreateCustomer
 {
@@ -21,6 +20,7 @@ namespace RideSharing.Application.Customers.CreateCustomer
                                            request.LastName,
                                            request.MiddleName,
                                            request.Phone,
+                                           request.Email,
                                            request.Gender,
                                            request.DateOfBirth);
 

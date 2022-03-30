@@ -1,6 +1,5 @@
 ﻿using RideSharing.Abstractions.Domain;
 using RideSharing.Abstractions.Extensions;
-using RideSharing.Domain.Cars;
 using RideSharing.Domain.Customers;
 using RideSharing.Domain.Drivers;
 using RideSharing.Domain.Locations;
@@ -15,26 +14,22 @@ namespace RideSharing.Domain.Trips
     {
         protected Trip() { }
 
-        internal Trip(Customer customer, TripLocation tripLocation)
+        protected Trip(Customer customer, TripLocation tripLocation)
         {
             Customer = customer;
             TripLocation = tripLocation;
             TripDate = new TripDate();
             Status = TripStatusType.InProgress;
-
-            this.Validate<Trip, TripValidator>();
         }
 
-        public Guid Id { get; }
-        public Guid DriverId { get; }
-        public Driver Driver { get; private set; }
-        public Guid CarId { get; }
-        public Car Car { get; private set; }
-        public Guid CustomerId { get; }
+        public Guid CustomerId { get; private set; }
         public Customer Customer { get; }
         public TripLocation TripLocation { get; }
         public TripDate TripDate { get; }
         public TripRating TripRating { get; private set; }
+
+        public Guid DriverCarId { get; private set; }
+        public DriverCar DriverCar { get; private set; }
         public TripStatusType Status { get; private set; }
 
 
@@ -56,7 +51,20 @@ namespace RideSharing.Domain.Trips
 
             TripLocation.UpdateStartLocation(endLocation);
         }
-        public void AssignToDriver(Driver driver)
+
+        public static Trip Create(Customer customer, TripLocation tripLocation)
+        {
+            var trip = new Trip(customer, tripLocation);
+
+            trip.Validate<Trip, TripValidator>();
+
+            trip.AddDomainEvent(new TripCreatedEvent(customer, trip));
+
+            return trip;
+
+        }
+
+        public void AssignToDriver(DriverCar driverCar)
         {
             switch (Status)
             {
@@ -68,8 +76,7 @@ namespace RideSharing.Domain.Trips
                     throw new InvalidOperationException(nameof(TripStatusType.InProgress));
             }
 
-            Driver = driver;
-            Car = driver.CurrentCar;
+            DriverCar = driverCar;
         }
         public void Start()
         {
@@ -85,6 +92,9 @@ namespace RideSharing.Domain.Trips
             }
 
             TripDate.TripStarted();
+
+            AddDomainEvent(new TripStartedEvent(this));
+
         }
         public void Cancel()
         {
@@ -113,6 +123,8 @@ namespace RideSharing.Domain.Trips
             Status = TripStatusType.Completed;
             TripDate.TripEnded();
             TripRating = new TripRating();
+
+            AddDomainEvent(new TripCompletedEvent(this));
         }
         public void UpdateCustomerRating(int rating)
         {

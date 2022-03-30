@@ -2,10 +2,7 @@
 using RideSharing.Abstractions.Extensions;
 using RideSharing.Domain.Common;
 using RideSharing.Domain.Customers.Validations;
-using RideSharing.Domain.Locations;
 using RideSharing.Domain.Trips;
-using RideSharing.Domain.Trips.Events;
-using RideSharing.Domain.Trips.ValueObjects;
 using RideSharing.Shared.Enums;
 
 namespace RideSharing.Domain.Customers
@@ -18,46 +15,36 @@ namespace RideSharing.Domain.Customers
         {
 
 
-            Person = person;
+            PersonInfo = person;
             CreatedAt = DateTime.UtcNow;
 
             this.Validate<Customer, CustomerValidator>();
         }
 
-        public Person Person { get; private set; }
+        public Person PersonInfo { get; private set; }
         public DateTime CreatedAt { get; }
         private readonly List<Trip> _trips = new();
         public IReadOnlyCollection<Trip> Trips => _trips.AsReadOnly();
 
 
-        public static Customer Create(string firstName, string lastName, string middleName, string phone, Gender gender, DateTime dateOfBirth)
+        public static Customer Create(string firstName, string lastName, string middleName, string phone, string email, Gender gender, DateTime dateOfBirth)
         {
-            var person = new Person(gender, dateOfBirth, firstName, lastName, middleName, phone);
+            var person = new Person(firstName, lastName, middleName, phone, email, gender, dateOfBirth);
             var customer = new Customer(person);
 
             return customer.Validate<Customer, CustomerValidator>();
         }
 
 
-        public void AddTrip(Location startLocation, Location endLocation)
+        public void AddTrip(Trip trip)
         {
-            if (startLocation is null)
+            if (trip is null)
             {
-                throw new ArgumentNullException(nameof(startLocation));
+                throw new ArgumentNullException(nameof(trip));
             }
-
-            if (endLocation is null)
-            {
-                throw new ArgumentNullException(nameof(endLocation));
-            }
-
-            var tripLocation = new TripLocation(startLocation, endLocation);
-
-            var trip = new Trip(this, tripLocation);
 
             _trips.Add(trip);
 
-            AddDomainEvent(new TripCreatedEvent(this, trip));
         }
 
 

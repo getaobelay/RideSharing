@@ -1,30 +1,58 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using Duende.IdentityServer.EntityFramework.Options;
+using Microsoft.AspNetCore.ApiAuthorization.IdentityServer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using RideSharing.Domain.Cars;
 using RideSharing.Domain.Customers;
 using RideSharing.Domain.Drivers;
 using RideSharing.Domain.Trips;
+using RideSharing.Infrastructure;
+using RideSharing.Infrastructure.Identity;
 using System.Reflection;
 
-namespace RideSharing.Infrastructure.Context;
-
-public class ApplicationDbContext : IdentityDbContext
+namespace RideSharing.Infrastructure.Context
 {
-    public DbSet<Customer> Customers { get; set; }
-    public DbSet<Trip> Trips { get; set; }
-    public DbSet<Car> Cars { get; set; }
-    public DbSet<Driver> Drivers { get; set; }
-
-
-    public ApplicationDbContext(DbContextOptions options)
-        : base(options)
+    internal interface IApplicationDbContext
     {
+        DbSet<Customer> Customers { get; }
+        DbSet<Trip> Trips { get; }
+        DbSet<Car> Cars { get; }
+        DbSet<Driver> Drivers { get; }
+        DbSet<DriverCar> DriverCars { get; }
+        Task<int> SaveChangesAsync(CancellationToken cancellationToken);
+
     }
 
-    protected override void OnModelCreating(ModelBuilder builder)
-    {
-        builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
-        base.OnModelCreating(builder);
-    }
 
+    public class ApplicationDbContext : ApiAuthorizationDbContext<ApplicationUser>, IApplicationDbContext
+    {
+        private readonly IDateTime _dateTime;
+
+        public ApplicationDbContext(
+            DbContextOptions<ApplicationDbContext> options,
+            IOptions<OperationalStoreOptions> operationalStoreOptions,
+            IDateTime dateTime) : base(options, operationalStoreOptions)
+        {
+            _dateTime = dateTime;
+        }
+
+        public DbSet<Customer> Customers => Set<Customer>();
+        public DbSet<Trip> Trips => Set<Trip>();
+        public DbSet<Car> Cars => Set<Car>();
+        public DbSet<Driver> Drivers => Set<Driver>();
+        public DbSet<DriverCar> DriverCars => Set<DriverCar>();
+
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+
+            base.OnModelCreating(builder);
+        }
+
+        public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+        {
+            return base.SaveChangesAsync(cancellationToken);
+        }
+
+    }
 }

@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using RideSharing.Abstractions.Domain;
 using RideSharing.Abstractions.Extensions;
+using RideSharing.Domain.Trips;
 
 namespace RideSharing.Domain.Locations
 {
@@ -14,31 +15,39 @@ namespace RideSharing.Domain.Locations
     {
 
         private Location() { }
-        internal Location(string latitude, string longitude, string landmark, string landmarkCity, string landmarkState, string landmarkName, string city, string country)
+        private Location(double latitude, double longitude, string addressLine, string landmark, string postalCode, string country)
         {
 
 
             Latitude = latitude;
             Longitude = longitude;
+            AddressLine = addressLine;
             Landmark = landmark;
-            LandmarkCity = landmarkCity;
-            LandmarkState = landmarkState;
-            LandmarkName = landmarkName;
-            City = city;
+            PostalCode = postalCode;
             Country = country;
+
 
             this.Validate<Location, LocationValidator>();
         }
 
 
-        public Guid Id { get; private set; }
-        public string Latitude { get; private set; }
-        public string Longitude { get; private set; }
+        public double Latitude { get; private set; }
+        public double Longitude { get; private set; }
+        public string AddressLine { get; private set; }
         public string Landmark { get; private set; }
-        public string LandmarkCity { get; private set; }
-        public string LandmarkState { get; private set; }
-        public string LandmarkName { get; private set; }
-        public string City { get; private set; }
+        public string PostalCode { get; private set; }
         public string Country { get; private set; }
+
+        public static Location Create(double latitude, double longitude, string addressLine, string landmark, string postalCode, string country)
+        {
+            return new Location(latitude, longitude, addressLine, landmark, postalCode, country);
+        }
+        public IReadOnlyCollection<TripLocation> StartLocations { get; set; }
+        public IReadOnlyCollection<TripLocation> EndLocations { get; set; }
+
+        public static object Create()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

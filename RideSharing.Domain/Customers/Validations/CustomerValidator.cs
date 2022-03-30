@@ -7,7 +7,7 @@ namespace RideSharing.Domain.Customers.Validations
     {
         public CustomerValidator()
         {
-            RuleFor(l => l.Person).NotEmpty().WithMessage("Person cannot be empty.")
+            RuleFor(l => l.PersonInfo).NotEmpty().WithMessage("Person cannot be empty.")
                                      .NotNull().WithMessage("LicenseNo cannot be null.");
         }
     }

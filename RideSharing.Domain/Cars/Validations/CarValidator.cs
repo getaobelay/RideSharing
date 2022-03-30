@@ -13,8 +13,7 @@ namespace RideSharing.Domain.Cars.Validations
             RuleFor(l => l.Model).NotEmpty().WithMessage("Model cannot be empty.")
                                             .NotNull().WithMessage("Model cannot be null.");
 
-            RuleFor(l => l.LicensePlateNo).NotEmpty().WithMessage("License plate number cannot be empty.")
-                                          .NotNull().WithMessage("License plate number cannot be null.");
+
         }
     }
 }

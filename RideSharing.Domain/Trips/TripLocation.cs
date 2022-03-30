@@ -1,10 +1,11 @@
-﻿using RideSharing.Abstractions.Extensions;
+﻿using RideSharing.Abstractions.Domain;
+using RideSharing.Abstractions.Extensions;
 using RideSharing.Domain.Locations;
 using RideSharing.Domain.Trips.Validations;
 
-namespace RideSharing.Domain.Trips.ValueObjects
+namespace RideSharing.Domain.Trips
 {
-    public class TripLocation
+    public class TripLocation : Entity
     {
         protected TripLocation() { }
 
@@ -21,6 +22,12 @@ namespace RideSharing.Domain.Trips.ValueObjects
         public Guid EndLocationId { get; }
         public Location EndLocation { get; private set; }
 
+
+        public static TripLocation Create(Location startLocation, Location endLocation)
+        {
+            return new TripLocation(startLocation, endLocation);
+
+        }
 
         public void UpdateStartLocation(Location startLocation)
         {

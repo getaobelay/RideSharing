@@ -1,15 +1,19 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using RideSharing.Abstractions.Repositories;
 using RideSharing.Infrastructure.Context;
+using RideSharing.Infrastructure.Identity;
+using RideSharing.Infrastructure.Services;
 using System.Reflection;
-using WarehouseManagementSystem.Infrastructure.Identity;
 
-namespace WarehouseManagementSystem.Infrastructure
+namespace RideSharing.Infrastructure
 {
     public static class DependecyInjection
     {
+
         public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
         {
 
@@ -17,7 +21,7 @@ namespace WarehouseManagementSystem.Infrastructure
             if (configuration.GetValue<bool>("UseInMemoryDatabase"))
             {
                 services.AddDbContext<ApplicationDbContext>(options =>
-                    options.UseInMemoryDatabase("CleanArchitectureDb"));
+                    options.UseInMemoryDatabase("RideSharing"));
             }
             else
             {
@@ -27,18 +31,33 @@ namespace WarehouseManagementSystem.Infrastructure
                         b => b.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName)));
             }
 
-            services.AddDbContext<ApplicationDbContext>(options =>
-                options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"),
-                b => b.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName)));
 
-            services.AddIdentityCore<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = false)
-                 .AddEntityFrameworkStores<ApplicationDbContext>();
+
+            services.AddSingleton<IGeoLocationService, GeoLocationService>();
+            services.AddScoped<IApplicationDbContext>(provider => provider.GetRequiredService<ApplicationDbContext>());
+
+
+            services.AddDefaultIdentity<ApplicationUser>()
+                .AddRoles<IdentityRole>()
+                .AddEntityFrameworkStores<ApplicationDbContext>();
+
+
+            services.AddIdentityServer()
+                    .AddApiAuthorization<ApplicationUser, ApplicationDbContext>();
+
+            services.AddTransient<IDateTime, DateTimeService>();
+
+            services.AddAuthentication()
+                    .AddIdentityServerJwt();
+
+            //services.AddAuthorization(options =>
+            //    options.AddPolicy("CanPurge", policy => policy.RequireRole("Administrator")));
 
 
             services.Scan(s => s.FromAssemblies(Assembly.GetExecutingAssembly())
-                                .AddClasses(c => c.AssignableTo(typeof(IRepository<>)))
-                                .AsImplementedInterfaces()
-                                .WithScopedLifetime());
+                                    .AddClasses(c => c.AssignableTo(typeof(IRepository<>)))
+                                    .AsImplementedInterfaces()
+                                    .WithScopedLifetime());
 
 
             return services;

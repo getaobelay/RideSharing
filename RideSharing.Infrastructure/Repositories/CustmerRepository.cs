@@ -2,13 +2,13 @@
 using RideSharing.Domain.Customers;
 using RideSharing.Infrastructure.Context;
 
-namespace RideSharing.Infrastructure
+namespace RideSharing.Infrastructure.Repositories
 {
     public interface ICustmerRepository : IRepository<Customer>
     {
     }
 
-    public class CustmerRepository : Repository<ApplicationDbContext, Customer>, ICustmerRepository
+    public class CustmerRepository : Repository<Customer>, ICustmerRepository
     {
         public CustmerRepository(ApplicationDbContext context) : base(context)
         {

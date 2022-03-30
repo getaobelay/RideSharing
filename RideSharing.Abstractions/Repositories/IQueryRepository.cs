@@ -7,8 +7,11 @@ namespace RideSharing.Abstractions.Repositories
     {
         Task<int> CountAll();
         Task<int> CountWhere(Expression<Func<T, bool>> predicate);
-        Task<IEnumerable<T>> GetAllAsync();
+        Task<IEnumerable<T>> GetAsync();
         Task<IEnumerable<T>> GetAsync(Expression<Func<T, bool>> predicate);
+        Task<IEnumerable<T>> GetAsync(Expression<Func<T, bool>> predicate, string includeString);
+        Task<IEnumerable<T>> GetAsync(Expression<Func<T, bool>> predicate, params Expression<Func<T, object>>[] includes);
+
         Task<IEnumerable<T>> GetAsync(Expression<Func<T, bool>> predicate = null,
                                         Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null,
                                         string includeString = null);

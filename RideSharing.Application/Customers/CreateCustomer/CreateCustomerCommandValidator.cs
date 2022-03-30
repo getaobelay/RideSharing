@@ -2,9 +2,9 @@
 
 namespace RideSharing.Application.Customers.CreateCustomer
 {
-    public class CreateCustomerValidator : AbstractValidator<CreateCustomerCommand>
+    public class CreateCustomerCommandValidator : AbstractValidator<CreateCustomerCommand>
     {
-        public CreateCustomerValidator()
+        public CreateCustomerCommandValidator()
         {
             RuleFor(l => l.FirstName).NotEmpty().WithMessage("First name cannot be empty.")
                                  .NotNull().WithMessage("First name cannot be null.");

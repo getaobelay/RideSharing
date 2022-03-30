@@ -7,28 +7,8 @@ namespace RideSharing.Domain.Common
 
     public class Person
     {
-        public Person(Gender gender, DateTime dateOfBirth, string firstName, string lastName, string middleName, string phone)
+        public Person(string firstName, string lastName, string middleName, string phone, string email, Gender gender, DateTime dateOfBirth)
         {
-            if (string.IsNullOrWhiteSpace(firstName))
-            {
-                throw new ArgumentException($"'{nameof(firstName)}' cannot be null or empty.", nameof(firstName));
-            }
-
-            if (string.IsNullOrWhiteSpace(lastName))
-            {
-                throw new ArgumentException($"'{nameof(lastName)}' cannot be null or empty.", nameof(lastName));
-            }
-
-            if (string.IsNullOrWhiteSpace(middleName))
-            {
-                throw new ArgumentException($"'{nameof(middleName)}' cannot be null or empty.", nameof(middleName));
-            }
-
-            if (string.IsNullOrWhiteSpace(phone))
-            {
-                throw new ArgumentException($"'{nameof(phone)}' cannot be null or empty.", nameof(phone));
-            }
-
             Gender = gender;
             DateOfBirth = dateOfBirth;
             FirstName = firstName;
@@ -45,6 +25,32 @@ namespace RideSharing.Domain.Common
         public string LastName { get; private set; }
         public string MiddleName { get; private set; }
         public string Phone { get; private set; }
+        public string Email { get; private set; }
+
+        public void UpdateName(string firstName, string lastName, string middleName)
+        {
+
+            if (FirstName != firstName && !string.IsNullOrWhiteSpace(firstName))
+                FirstName = firstName;
+
+            if (LastName != lastName && !string.IsNullOrWhiteSpace(lastName))
+                FirstName = firstName;
+
+            if (MiddleName != middleName && !string.IsNullOrWhiteSpace(middleName))
+                FirstName = firstName;
+
+        }
+
+        public void UpdateContact(string phone, string email)
+        {
+            if (Phone != phone && !string.IsNullOrWhiteSpace(phone))
+                Phone = phone;
+
+            if (Email != email && !string.IsNullOrWhiteSpace(email))
+                Email = email;
+
+        }
+
 
     }
 

@@ -13,23 +13,19 @@ namespace RideSharing.Domain.Cars
     {
 
         public Guid Id { get; private set; }
-        public Guid DriverId { get; private set; }
-
-        public readonly List<Driver> _drivers = new();
-
-        public Car(string manufacture, string model, string licensePlateNo)
+        public Car(string manufacture, string model)
         {
             Manufacture = manufacture;
             Model = model;
-            LicensePlateNo = licensePlateNo;
 
             this.Validate<Car, CarValidator>();
         }
-
-        public IReadOnlyCollection<Driver> Drivers => _drivers.AsReadOnly();
         public string Manufacture { get; private set; }
         public string Model { get; private set; }
-        public string LicensePlateNo { get; private set; }
+
+        public Guid DriverCarId { get; private set; }
+        private readonly List<DriverCar> _driverCars = new();
+        public IReadOnlyCollection<DriverCar> DriverCars => _driverCars.AsReadOnly();
 
     }
 }

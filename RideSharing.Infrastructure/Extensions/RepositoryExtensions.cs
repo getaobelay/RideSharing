@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 
-namespace RideSharing.Abstractions.Repositories
+namespace RideSharing.Infrastructure.Extensions
 {
     internal static class RepositoryExtensions
     {
