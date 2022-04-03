@@ -1,1 +1,1 @@
-RideSharing.Api
+Ride sharing application
