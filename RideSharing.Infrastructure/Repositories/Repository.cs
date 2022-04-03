@@ -140,9 +140,9 @@ namespace RideSharing.Infrastructure.Repositories
         public async Task<T> GetByIdAsync(Guid id, string include) =>
             await _dbSet.Where(e => e.Id == id).Include(include).SingleOrDefaultAsync();
 
-        public async Task SaveChangesAsync()
+        public async Task SaveChangesAsync(CancellationToken cancellationToken = default)
         {
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync(cancellationToken);
         }
 
         public void Update(T entity)

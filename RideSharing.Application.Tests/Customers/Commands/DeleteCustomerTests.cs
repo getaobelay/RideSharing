@@ -13,9 +13,9 @@ public class DeleteCustomerTests : TestBase
     [Test]
     public async Task ShouldNotDeleteWhenCommandIsNotValid()
     {
-        var command = new DeleteCustomerCommand { Id = Guid.Empty };
+        var command = new DeleteCustomerCommand();
 
-        var result = await SendAsync(command);
+        await FluentActions.Invoking(() => SendAsync(command)).Should().ThrowAsync<ArgumentNullException>();
     }
 
     [Test]

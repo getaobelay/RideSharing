@@ -22,8 +22,12 @@ namespace RideSharing.Application.Tests.Customers
             Faker<Domain.Common.Person> personInfoGenerator = new Faker<Domain.Common.Person>()
                 .UsePrivateConstructor()
                 .RuleFor(c => c.FirstName, bogus => bogus.Name.FirstName())
+                .RuleFor(c => c.MiddleName, bogus => bogus.Name.FirstName())
                 .RuleFor(c => c.LastName, bogus => bogus.Name.LastName())
-                .RuleFor(c => c.DateOfBirth, DateTime.Now);
+                .RuleFor(c => c.Phone, bogus => bogus.Phone.Locale)
+                .RuleFor(c => c.Gender, Shared.Enums.Gender.Male)
+                .RuleFor(c => c.DateOfBirth, DateTime.Now)
+                .RuleFor(c => c.Email, bogus => bogus.Person.Email);
 
             return personInfoGenerator.Generate(1).First();
 

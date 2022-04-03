@@ -7,16 +7,16 @@ namespace RideSharing.Domain.Common
 
     public class Person
     {
-        public Person(string firstName, string lastName, string middleName, string phone, string email, Gender gender, DateTime dateOfBirth)
+        private Person() { }
+        protected Person(string firstName, string lastName, string middleName, string phone, string email, Gender gender, DateTime dateOfBirth)
         {
             Gender = gender;
             DateOfBirth = dateOfBirth;
             FirstName = firstName;
             LastName = lastName;
             MiddleName = middleName;
+            Email = email;
             Phone = phone;
-
-            this.Validate<Person, PersonValidator>();
         }
 
         public Gender Gender { get; private set; }
@@ -26,6 +26,13 @@ namespace RideSharing.Domain.Common
         public string MiddleName { get; private set; }
         public string Phone { get; private set; }
         public string Email { get; private set; }
+
+        public static Person Create(string firstName, string lastName, string middleName, string phone, string email, Gender gender, DateTime dateOfBirth)
+        {
+            var person = new Person(firstName, lastName, middleName, phone, email, gender, dateOfBirth);
+
+            return person.Validate<Person, PersonValidator>();
+        }
 
         public void UpdateName(string firstName, string lastName, string middleName)
         {

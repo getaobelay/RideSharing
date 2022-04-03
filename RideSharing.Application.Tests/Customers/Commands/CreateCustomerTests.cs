@@ -1,5 +1,6 @@
 ﻿using FluentAssertions;
 using NUnit.Framework;
+using RideSharing.Abstractions.Exceptions;
 using RideSharing.Application.Customers.CreateCustomer;
 using RideSharing.Domain.Customers;
 
@@ -13,7 +14,7 @@ public class CreateCustomerTests : TestBase
     {
         var command = new CreateCustomerCommand();
 
-        var result = await SendAsync(command);
+        await FluentActions.Invoking(() => SendAsync(command)).Should().ThrowAsync<NotValidException>();
     }
 
     [Test]
@@ -29,7 +30,7 @@ public class CreateCustomerTests : TestBase
             Email = "cusotmer1@email.com",
             MiddleName = "cusotmerName",
             Phone = "055-144-1442",
-            DateOfBirth = DateTime.Now,
+            DateOfBirth = DateTime.Now
         };
 
         var result = await SendAsync(command);

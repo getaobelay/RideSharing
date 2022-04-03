@@ -29,7 +29,7 @@ namespace RideSharing.Domain.Customers
 
         public static Customer Create(string firstName, string lastName, string middleName, string phone, string email, Gender gender, DateTime dateOfBirth)
         {
-            var person = new Person(firstName, lastName, middleName, phone, email, gender, dateOfBirth);
+            var person = Person.Create(firstName, lastName, middleName, phone, email, gender, dateOfBirth);
             var customer = new Customer(person);
 
             return customer.Validate<Customer, CustomerValidator>();

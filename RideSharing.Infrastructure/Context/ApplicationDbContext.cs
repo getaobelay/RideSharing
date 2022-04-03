@@ -6,7 +6,6 @@ using RideSharing.Domain.Cars;
 using RideSharing.Domain.Customers;
 using RideSharing.Domain.Drivers;
 using RideSharing.Domain.Trips;
-using RideSharing.Infrastructure;
 using RideSharing.Infrastructure.Identity;
 using System.Reflection;
 
@@ -22,7 +21,6 @@ namespace RideSharing.Infrastructure.Context
         Task<int> SaveChangesAsync(CancellationToken cancellationToken);
 
     }
-
 
     public class ApplicationDbContext : ApiAuthorizationDbContext<ApplicationUser>, IApplicationDbContext
     {

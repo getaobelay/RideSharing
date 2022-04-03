@@ -10,7 +10,7 @@ namespace RideSharing.Abstractions.Repositories
     public interface IRepository<T> : IQueryRepository<T>, ICommandRepository<T>
         where T : Entity
     {
-        Task SaveChangesAsync();
+        Task SaveChangesAsync(CancellationToken cancellationToken = default);
     }
 
 }

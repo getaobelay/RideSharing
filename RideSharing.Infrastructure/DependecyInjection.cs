@@ -35,20 +35,20 @@ namespace RideSharing.Infrastructure
 
             services.AddSingleton<IGeoLocationService, GeoLocationService>();
             services.AddScoped<IApplicationDbContext>(provider => provider.GetRequiredService<ApplicationDbContext>());
-
-
-            services.AddDefaultIdentity<ApplicationUser>()
-                .AddRoles<IdentityRole>()
-                .AddEntityFrameworkStores<ApplicationDbContext>();
-
-
-            services.AddIdentityServer()
-                    .AddApiAuthorization<ApplicationUser, ApplicationDbContext>();
-
             services.AddTransient<IDateTime, DateTimeService>();
 
-            services.AddAuthentication()
-                    .AddIdentityServerJwt();
+
+
+            services.AddIdentity<ApplicationUser, IdentityRole>()
+                .AddEntityFrameworkStores<ApplicationDbContext>()
+                .AddDefaultTokenProviders();
+
+            var builder = services.AddIdentityServer()
+                .AddInMemoryIdentityResources(Config.GetIdentityResources())
+                .AddInMemoryClients(Config.GetClients())
+                .AddAspNetIdentity<ApplicationUser>();
+
+            builder.AddDeveloperSigningCredential();
 
             //services.AddAuthorization(options =>
             //    options.AddPolicy("CanPurge", policy => policy.RequireRole("Administrator")));

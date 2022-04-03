@@ -1,10 +1,11 @@
 ﻿using MediatR;
 using RideSharing.Abstractions.Commands;
+using RideSharing.Shared;
 using RideSharing.Shared.Enums;
 
 namespace RideSharing.Application.Customers.CreateCustomer
 {
-    public record CreateCustomerCommand : ICommandRequest<CustomerDto>
+    public record CreateCustomerCommand : ICommandRequest<Result<CustomerDto>>
     {
         public string FirstName { get; set; }
         public string LastName { get; set; }
